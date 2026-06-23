@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AUTONEX — Автологістика під ключ
 
-## Getting Started
+Лендінг автологістичної компанії: доставка авто з аукціонів США та Європи під
+ключ. Збудовано на **Next.js 16 (App Router) + React 19 + Tailwind CSS v4**.
 
-First, run the development server:
+## Запуск
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # продакшн-збірка
+npm start        # запуск продакшн-збірки
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Стек і структура
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js 16 / App Router**, статична генерація сторінки.
+- **Tailwind v4** + кастомний дизайн-токен-шар у `src/app/globals.css`
+  (глибокий navy-фон, електрик-блю акцент, glassmorphism, grid-фон, glow).
+- Шрифти: **Montserrat** (display, заголовки) + **Manrope** (текст), обидва з
+  кириличним сабсетом через `next/font`.
+- Усі ілюстрації — інлайн-SVG (автовоз, спортивне авто, трек-карта), без
+  зовнішніх зображень: легко змінювати кольори та масштаб.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├─ app/
+│  ├─ layout.tsx        # шрифти, метадані, ambient-фон
+│  ├─ page.tsx          # збірка всіх секцій
+│  └─ globals.css       # дизайн-система: токени, .card, .btn, анімації
+├─ components/
+│  ├─ Header.tsx        # липка шапка + мобільне меню (client)
+│  ├─ Hero.tsx          # головний екран + рейтинг-картка
+│  ├─ Steps.tsx         # «4 прості кроки»
+│  ├─ Calculator.tsx    # ІНТЕРАКТИВНИЙ калькулятор вартості (client)
+│  ├─ Tracking.tsx      # онлайн-трекінг + макет телефону з картою
+│  ├─ Features.tsx      # «Чому обирають AUTONEX»
+│  ├─ Audience.tsx      # «Для кого ми працюємо»
+│  ├─ Testimonials.tsx  # відгуки (нескінченна стрічка)
+│  ├─ CtaBanner.tsx     # фінальний заклик
+│  ├─ StatsBar.tsx      # 500+ / 12+ / 4+ / 98%
+│  ├─ Footer.tsx
+│  ├─ Reveal.tsx        # scroll-reveal анімації (IntersectionObserver)
+│  ├─ Logo.tsx / icons.tsx / *Art.tsx  # SVG-логотип, іконки, ілюстрації
+└─ lib/
+   └─ data.ts           # увесь контент (нав, кроки, фічі, відгуки, контакти)
+```
 
-## Learn More
+## Калькулятор (пошук/розрахунок)
 
-To learn more about Next.js, take a look at the following resources:
+`Calculator.tsx` рахує орієнтовну вартість доставки в реальному часі за трьома
+параметрами — **звідки** (США / Європа), **тип авто**, **місто призначення** —
+з анімованим лічильником ціни та розбивкою (фрахт / оформлення / доставка по
+Україні). Логіку тарифів легко редагувати у масивах `ORIGINS`, `TYPES`, `CITIES`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Форма заявки → Telegram
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Кнопки «Залишити заявку» (хедер, футер) та «Отримати точний прорахунок»
+(калькулятор) відкривають модальне вікно `LeadDialog.tsx`. Воно надсилає POST на
+`/api/lead` ([route.ts](src/app/api/lead/route.ts)), який пересилає заявку у ваш
+Telegram через Bot API.
 
-## Deploy on Vercel
+Налаштування (скопіюйте `.env.example` → `.env.local`):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+TELEGRAM_BOT_TOKEN=<токен від @BotFather>
+TELEGRAM_CHAT_ID=<ваш chat_id або id групи>
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Поки токен не заданий — форма все одно працює (показує успіх), а заявка
+логується в консоль сервера. Будь-який елемент із атрибутом `data-lead`
+відкриває форму; калькулятор передає контекст розрахунку через подію
+`autonex:lead`.
+
+## Реальні фото
+
+Усі знімки — у `public/images/` (Unsplash, вільні до використання): автовоз у
+hero, преміум-авто в калькуляторі, Ferrari у CTA, порт/авто в картках аудиторії,
+реальні портрети у відгуках. Кожне фото має синій градієнт-оверлей під бренд.
+
+## Що міняти першим
+
+- **Контент і контакти** — `src/lib/data.ts` (телефон, Telegram, email, тексти).
+- **Кольори/бренд** — CSS-змінні на початку `src/app/globals.css` (`--brand*`).
+- **Тарифи калькулятора** — масиви у `src/components/Calculator.tsx`.
+- **Фірмові акценти** — кутастий логотип `src/components/Logo.tsx`, слеш/blade
+  утиліти (`.slash`, `.clip-blade`) у `globals.css`.
