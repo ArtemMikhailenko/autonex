@@ -1,151 +1,124 @@
+import Image from "next/image";
 import { Reveal } from "./Reveal";
+import { ArrowRight } from "./icons";
 
-const EVENTS = [
-  { time: "08:42", code: "AUC", text: "Лот виграно на Copart — BMW X5 2021", state: "done" },
-  { time: "11:15", code: "PCK", text: "Авто забране з майданчика, фото-звіт надіслано", state: "done" },
-  { time: "14:30", code: "PRT", text: "Доставлено в порт Newark, NJ", state: "done" },
-  { time: "—",     code: "OCN", text: "Завантажено на MSC ANNA · контейнер MSKU-7741203", state: "live" },
-  { time: "—",     code: "EU",  text: "Розвантаження · Клайпеда", state: "queued" },
-  { time: "—",     code: "UA",  text: "Розмитнення · доставка авто-возом", state: "queued" },
+const TELEMETRY = [
+  { k: "ETA", v: "14 днів" },
+  { k: "Пройдено", v: "1 280 км" },
+  { k: "Залишилось", v: "780 км" },
+  { k: "Оновлено", v: "2 хв тому" },
 ];
 
-function stateStyle(s: string) {
-  if (s === "done") return { dot: "bg-emerald-400", text: "text-[var(--text)]", label: "OK" };
-  if (s === "live") return { dot: "bg-[var(--brand-bright)] pulse-dot", text: "text-[var(--text)]", label: "LIVE" };
-  return { dot: "bg-white/15", text: "text-[var(--faint)]", label: "WAIT" };
-}
-
-function MapDevice() {
-  return (
-    <div className="relative">
-      <div
-        className="absolute -inset-8 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgba(47,107,255,0.3), transparent 70%)" }}
-        aria-hidden
-      />
-      <div className="relative clip-blade-tr overflow-hidden border border-[var(--border-strong)] bg-[#06090f]">
-        {/* device chrome */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)] bg-[rgba(255,255,255,0.02)]">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#ff5f57]" />
-            <span className="w-2 h-2 rounded-full bg-[#febc2e]" />
-            <span className="w-2 h-2 rounded-full bg-[#28c840]" />
-          </div>
-          <span className="mono text-[0.7rem] text-[var(--faint)] tabular-nums">
-            track.autonex.com / LOT-38291
-          </span>
-          <span className="mono-label !text-[var(--brand-bright)] flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot" />
-            LIVE
-          </span>
-        </div>
-
-        {/* map */}
-        <div className="relative">
-          <svg viewBox="0 0 600 320" className="w-full h-auto block">
-            <defs>
-              <linearGradient id="rtg" x1="0" y1="0" x2="600" y2="0">
-                <stop stopColor="#4f8bff" />
-                <stop offset="1" stopColor="#2f6bff" />
-              </linearGradient>
-            </defs>
-            <rect width="600" height="320" fill="#06090f" />
-            {Array.from({ length: 17 }).map((_, i) => (
-              <line key={`h${i}`} x1="0" y1={i * 20} x2="600" y2={i * 20} stroke="#0f1a32" strokeWidth="0.6" />
-            ))}
-            {Array.from({ length: 31 }).map((_, i) => (
-              <line key={`v${i}`} x1={i * 20} y1="0" x2={i * 20} y2="320" stroke="#0f1a32" strokeWidth="0.6" />
-            ))}
-            {/* abstract continents */}
-            <path d="M30 110 C90 70 160 60 200 90 C250 130 280 110 320 130 C350 145 380 130 400 150" stroke="#1c2c4d" strokeWidth="60" fill="none" opacity="0.35" strokeLinecap="round" />
-            <path d="M420 100 C460 90 510 110 540 140 C560 160 570 200 540 220" stroke="#1c2c4d" strokeWidth="55" fill="none" opacity="0.35" strokeLinecap="round" />
-            {/* route */}
-            <path d="M70 200 C170 80 320 230 460 110 510 70 540 120 540 120" fill="none" stroke="#1c2c4d" strokeWidth="4" />
-            <path d="M70 200 C170 80 320 230 460 110 510 70 540 120 540 120" fill="none" stroke="url(#rtg)" strokeWidth="2.4" className="route-dash" />
-            {/* origin / destination */}
-            <circle cx="70" cy="200" r="6" fill="#4f8bff" />
-            <text x="80" y="218" fontFamily="ui-monospace, monospace" fontSize="10" fill="#9aa1ad">NEWARK · USA</text>
-            <circle cx="540" cy="120" r="6" fill="#34d399" />
-            <text x="468" y="108" fontFamily="ui-monospace, monospace" fontSize="10" fill="#9aa1ad">КИЇВ · UA</text>
-            {/* current ship */}
-            <g>
-              <circle cx="345" cy="170" r="14" fill="rgba(79,139,255,0.18)" />
-              <circle cx="345" cy="170" r="6" fill="#4f8bff" className="pulse-dot" />
-              <text x="358" y="173" fontFamily="ui-monospace, monospace" fontSize="10" fill="#eef2fb">VESSEL · MSC ANNA</text>
-            </g>
-          </svg>
-        </div>
-
-        {/* footer telemetry strip */}
-        <div className="grid grid-cols-4 border-t border-[var(--border)] mono text-[0.72rem]">
-          {[
-            ["VESSEL", "MSC ANNA"],
-            ["SPEED", "18.4 KN"],
-            ["ETA", "14 ДНІВ"],
-            ["PROGRESS", "62%"],
-          ].map(([k, v], i) => (
-            <div key={k} className={`px-4 py-3 ${i > 0 ? "border-l border-[var(--border)]" : ""}`}>
-              <div className="text-[var(--faint)]">{k}</div>
-              <div className="text-[var(--text)] mt-0.5 tabular-nums">{v}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+const PROGRESS = 62;
 
 export function Tracking() {
   return (
-    <section className="relative py-20 lg:py-28">
+    <section className="py-5">
       <div className="container-x">
-        <Reveal>
-          <div className="grid lg:grid-cols-[1fr_auto] gap-6 items-end mb-12">
-            <div>
-              <span className="mono-label flex items-center gap-2.5">
-                <span className="slash" aria-hidden />
-                CONTROL / LIVE TRACKING
-              </span>
-              <h2 className="h-title text-[2rem] sm:text-[2.8rem] lg:text-[3.4rem] mt-3 max-w-2xl">
-                Бачиш авто.<br />
-                Бачиш кожен <span className="text-gradient">кілометр.</span>
-              </h2>
-            </div>
-            <p className="mono text-xs text-[var(--faint)] lg:text-right max-w-[260px]">
-              GPS · vessel-AIS · фото-звіти.<br />
-              Жодних «зателефонуйте завтра».
-            </p>
-          </div>
-        </Reveal>
+        <div className="panel relative overflow-hidden p-7 sm:p-10">
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "radial-gradient(70% 60% at 50% 42%, rgba(47,107,255,0.18), transparent 70%)" }}
+          />
 
-        <div className="grid lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-12">
+          {/* header */}
           <Reveal>
-            <MapDevice />
+            <div className="relative grid lg:grid-cols-[1fr_auto] gap-6 items-start">
+              <div>
+                <span className="eyebrow text-[var(--brand-bright)]">ВІДСТЕЖЕННЯ</span>
+                <h2 className="h-title text-[1.9rem] sm:text-[2.4rem] mt-3 max-w-[16ch]">
+                  Бачиш авто. Бачиш <span className="text-gradient">кожен кілометр.</span>
+                </h2>
+              </div>
+              <div
+                className="flex items-center gap-2.5 rounded-full px-4 py-2 self-start"
+                style={{ background: "rgba(12,18,32,0.6)", border: "1px solid rgba(120,190,255,0.28)" }}
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-400 pulse-dot" />
+                <span className="mono text-[0.72rem] tracking-widest text-[#c3d3ef]">LIVE · LOT 38291</span>
+              </div>
+            </div>
           </Reveal>
 
-          {/* event log — looks like a real timeline */}
-          <Reveal delay={120}>
-            <div className="mono-label mb-4">EVENT LOG / LOT-38291</div>
-            <ol className="border-t border-[var(--border)]">
-              {EVENTS.map((e) => {
-                const s = stateStyle(e.state);
-                return (
-                  <li key={e.code} className="grid grid-cols-[60px_1fr_auto] gap-4 items-start py-4 border-b border-[var(--border)]">
-                    <div className="flex items-center gap-2.5">
-                      <span className={`w-2 h-2 rounded-full ${s.dot} mt-2`} />
-                      <span className="mono text-xs text-[var(--faint)] tabular-nums">{e.time}</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="mono-label !text-[var(--brand-bright)]">{e.code}</span>
-                      </div>
-                      <div className={`text-sm mt-1 ${s.text}`}>{e.text}</div>
-                    </div>
-                    <span className="mono text-[0.66rem] text-[var(--faint)] mt-1">{s.label}</span>
-                  </li>
-                );
-              })}
-            </ol>
+          {/* map */}
+          <Reveal delay={100}>
+            <div className="relative mt-4 sm:mt-0 -mx-7 sm:-mx-10">
+              <div className="relative aspect-[2170/725]">
+                <Image
+                  src="/images/track-map.webp"
+                  alt="Маршрут Європа → Україна"
+                  fill
+                  unoptimized
+                  sizes="(max-width: 1024px) 100vw, 1100px"
+                  className="object-contain"
+                />
+                <div
+                  className="absolute inset-x-0 bottom-0 h-[34%] pointer-events-none"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, transparent 0%, rgba(13,19,34,0.45) 46%, rgba(13,19,34,0.8) 100%)",
+                  }}
+                />
+                {/* chip riding with the truck */}
+                <div
+                  className="absolute left-1/2 -translate-x-1/2 -top-1 sm:top-[3%] rounded-lg sm:rounded-xl px-2.5 py-1.5 sm:px-4 sm:py-2.5 scale-[0.85] sm:scale-100"
+                  style={{
+                    background: "rgba(10,16,30,0.82)",
+                    backdropFilter: "blur(14px)",
+                    border: "1px solid rgba(120,190,255,0.3)",
+                    boxShadow: "0 12px 40px -16px rgba(47,130,255,0.8)",
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--brand-bright)] pulse-dot" />
+                    <span className="mono text-[0.68rem] tracking-widest text-[#c3d3ef]">В ДОРОЗІ</span>
+                  </div>
+                  <div className="mono text-[0.8rem] text-white tabular-nums mt-1">Берлін → Київ</div>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* one continuous progress rail — mirrors the route above */}
+          <Reveal delay={160}>
+            <div className="relative mt-4 sm:-mt-[62px]">
+              <div className="relative h-[3px] rounded-full bg-white/[0.08]">
+                <div
+                  className="absolute inset-y-0 left-0 rounded-full"
+                  style={{
+                    width: `${PROGRESS}%`,
+                    background: "linear-gradient(90deg, rgba(47,107,255,0.35), var(--brand-bright) 70%, #22d3ff)",
+                    boxShadow: "0 0 16px rgba(47,130,255,0.85)",
+                  }}
+                />
+                <span
+                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-white"
+                  style={{ left: `${PROGRESS}%`, boxShadow: "0 0 0 4px rgba(47,107,255,0.35), 0 0 18px 4px rgba(47,130,255,0.9)" }}
+                />
+              </div>
+
+              {/* telemetry read-out */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-6 mt-7">
+                {TELEMETRY.map((r, i) => (
+                  <div key={r.k} className={i > 0 ? "sm:pl-6 sm:border-l sm:border-white/[0.07]" : ""}>
+                    <div className="text-[0.6rem] uppercase tracking-[0.2em] text-[var(--faint)]">{r.k}</div>
+                    <div className="mono text-[1.15rem] text-white tabular-nums mt-1.5">{r.v}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-x-7 gap-y-3 mt-8">
+                {["GPS у реальному часі", "Фото-звіти з кожного етапу", "Сповіщення в Telegram"].map((f) => (
+                  <span key={f} className="flex items-center gap-2 text-sm text-[var(--muted)]">
+                    <span className="w-1 h-1 rounded-full bg-[var(--brand-bright)]" />
+                    {f}
+                  </span>
+                ))}
+                <button data-lead data-lead-context="Відстеження" className="btn btn-ghost justify-center w-full sm:w-auto !py-3 sm:!py-2.5 !px-5 !text-sm sm:ml-auto">
+                  Дізнатись більше <ArrowRight width={16} height={16} />
+                </button>
+              </div>
+            </div>
           </Reveal>
         </div>
       </div>

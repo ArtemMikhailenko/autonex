@@ -1,32 +1,30 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Reveal } from "./Reveal";
-import { ArrowRight, Send } from "./icons";
-import { CONTACT } from "@/lib/data";
+import Image from "next/image";
+import { ArrowRight } from "./icons";
 
 const ORIGINS = [
-  { id: "usa", label: "США", base: 1350, freight: 950, days: [25, 35] },
-  { id: "eu", label: "Європа", base: 750, freight: 480, days: [5, 7] },
+  { id: "de", label: "Німеччина", inland: 550, km: "1 850", days: "12—16" },
+  { id: "pl", label: "Польща", inland: 480, km: "1 100", days: "8—12" },
+  { id: "lt", label: "Литва", inland: 520, km: "1 200", days: "9—13" },
+  { id: "nl", label: "Нідерланди", inland: 600, km: "2 100", days: "13—17" },
+  { id: "us", label: "США", inland: 1350, km: "9 500", days: "28—35" },
+] as const;
+
+const DELIVERY = [
+  { id: "roro", label: "RoRo", ocean: 850 },
+  { id: "container", label: "Контейнер", ocean: 1100 },
 ] as const;
 
 const TYPES = [
-  { id: "sedan", label: "Легкове авто", k: 1 },
-  { id: "suv", label: "Кросовер / SUV", k: 1.28 },
-  { id: "jeep", label: "Позашляховик", k: 1.55 },
-  { id: "ev", label: "Електромобіль", k: 1.18 },
-  { id: "moto", label: "Мотоцикл", k: 0.7 },
+  { id: "sedan", label: "Легковий", k: 1 },
+  { id: "suv", label: "Кросовер / SUV", k: 1.2 },
+  { id: "jeep", label: "Позашляховик", k: 1.4 },
+  { id: "ev", label: "Електромобіль", k: 1.15 },
 ] as const;
 
-const CITIES = [
-  { id: "kyiv", label: "Київ, Україна", add: 0 },
-  { id: "lviv", label: "Львів, Україна", add: 40 },
-  { id: "odesa", label: "Одеса, Україна", add: 60 },
-  { id: "dnipro", label: "Дніпро, Україна", add: 90 },
-  { id: "kharkiv", label: "Харків, Україна", add: 120 },
-] as const;
-
-function useCountUp(target: number, ms = 600) {
+function useCountUp(target: number, ms = 650) {
   const [val, setVal] = useState(target);
   useEffect(() => {
     const from = val;
@@ -36,8 +34,7 @@ function useCountUp(target: number, ms = 600) {
     let raf = 0;
     const tick = (now: number) => {
       const t = Math.min(1, (now - start) / ms);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setVal(Math.round(from + diff * eased));
+      setVal(Math.round(from + diff * (1 - Math.pow(1 - t, 3))));
       if (t < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -47,160 +44,178 @@ function useCountUp(target: number, ms = 600) {
   return val;
 }
 
-/** segmented pill selector — replaces the generic <select> dropdowns */
-function Seg<T extends string>({
+function Field({
   label,
   value,
   onChange,
   options,
 }: {
   label: string;
-  value: T;
-  onChange: (v: T) => void;
-  options: ReadonlyArray<{ id: T; label: string }>;
+  value: string;
+  onChange: (v: string) => void;
+  options: ReadonlyArray<{ id: string; label: string }>;
 }) {
   return (
-    <div>
-      <div className="mono-label mb-2.5">{label}</div>
-      <div className="flex flex-wrap gap-1.5">
-        {options.map((o) => {
-          const active = o.id === value;
-          return (
-            <button
-              key={o.id}
-              type="button"
-              onClick={() => onChange(o.id)}
-              className={`px-3.5 py-2 text-sm rounded-lg border transition-colors ${
-                active
-                  ? "bg-[rgba(47,107,255,0.18)] border-[var(--brand-bright)] text-[var(--text)]"
-                  : "bg-transparent border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)]"
-              }`}
-            >
+    <label className="block">
+      <span className="block text-[0.6rem] uppercase tracking-[0.18em] text-[var(--faint)] mb-1.5">
+        {label}
+      </span>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full appearance-none bg-transparent border-0 border-b border-white/15 pt-1.5 pb-3 sm:pt-0 sm:pb-2 pr-6 text-[0.98rem] font-display font-semibold text-white focus:outline-none focus:border-[var(--brand-bright)] transition-colors cursor-pointer"
+        >
+          {options.map((o) => (
+            <option key={o.id} value={o.id} className="bg-[#0c1222]">
               {o.label}
-            </button>
-          );
-        })}
+            </option>
+          ))}
+        </select>
+        <span className="pointer-events-none absolute right-1 bottom-3.5 sm:bottom-2.5 w-1.5 h-1.5 border-r border-b border-[var(--brand-bright)] rotate-45" />
       </div>
-    </div>
+    </label>
   );
 }
 
 export function Calculator() {
-  const [origin, setOrigin] = useState<typeof ORIGINS[number]["id"]>("usa");
-  const [type, setType] = useState<typeof TYPES[number]["id"]>("sedan");
-  const [city, setCity] = useState<typeof CITIES[number]["id"]>("kyiv");
+  const [origin, setOrigin] = useState<string>("de");
+  const [delivery, setDelivery] = useState<string>("roro");
+  const [type, setType] = useState<string>("sedan");
 
-  const { total, freight, customs, local, days } = useMemo(() => {
-    const o = ORIGINS.find((x) => x.id === origin)!;
-    const t = TYPES.find((x) => x.id === type)!;
-    const c = CITIES.find((x) => x.id === city)!;
-    const freight = Math.round(o.freight * t.k);
-    const logistics = Math.round(o.base * t.k * 0.45);
-    const local = Math.round((220 + c.add) * (t.k > 1.3 ? 1.2 : 1));
-    const total = freight + logistics + local;
-    return { total, freight, customs: logistics, local, days: o.days };
-  }, [origin, type, city]);
+  const o = ORIGINS.find((x) => x.id === origin)!;
+  const d = DELIVERY.find((x) => x.id === delivery)!;
+  const t = TYPES.find((x) => x.id === type)!;
+
+  const { total, port, ocean, customs } = useMemo(() => {
+    const port = Math.round(o.inland);
+    const ocean = Math.round(d.ocean * t.k);
+    const customs = Math.round(378 * t.k);
+    return { total: port + ocean + customs, port, ocean, customs };
+  }, [o, d, t]);
 
   const animated = useCountUp(total);
 
   function openLead() {
-    const o = ORIGINS.find((x) => x.id === origin)!;
-    const t = TYPES.find((x) => x.id === type)!;
-    const c = CITIES.find((x) => x.id === city)!;
-    const ctx = `${o.label} → ${c.label.split(",")[0]} · ${t.label} · від $${total.toLocaleString("en-US")} · ${days[0]}–${days[1]} днів`;
+    const ctx = `${o.label} · ${d.label} · ${t.label} · від $${total.toLocaleString("en-US")}`;
     window.dispatchEvent(new CustomEvent("autonex:lead", { detail: { context: ctx } }));
   }
 
   return (
-    <section id="calc" className="relative py-20 lg:py-28">
+    <section id="calc" className="py-5 scroll-mt-24">
       <div className="container-x">
-        {/* editorial header */}
-        <Reveal>
-          <div className="grid lg:grid-cols-[1fr_auto] gap-6 items-end mb-10">
-            <div>
-              <span className="mono-label flex items-center gap-2.5">
-                <span className="slash" aria-hidden />
-                ESTIMATE / CALCULATOR
-              </span>
-              <h2 className="h-title text-[2rem] sm:text-[2.8rem] lg:text-[3.4rem] mt-3 max-w-xl">
-                Прорахуй вартість<br />за <span className="text-gradient">30 секунд.</span>
-              </h2>
+        <div className="panel relative min-h-[580px]">
+          {/* directional light from the right */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "radial-gradient(75% 90% at 85% 58%, rgba(47,107,255,0.26), transparent 70%)" }}
+          />
+
+          {/* LAYER 0 — oversized outlined price, sits BEHIND the car */}
+          <div className="hidden sm:block absolute right-10 top-14 z-0 text-right select-none pointer-events-none">
+            <div className="text-[0.6rem] uppercase tracking-[0.2em] text-[var(--faint)] mb-1">
+              {o.label} → Україна · {d.label}
             </div>
-            <p className="mono text-xs text-[var(--faint)] lg:text-right max-w-[280px]">
-              Орієнтовна цифра без зобовʼязань.<br />
-              Точну вартість фіксуємо листом на пошту.
-            </p>
+            <div
+              className="mono font-medium tabular-nums leading-[0.85] text-transparent"
+              style={{
+                fontSize: "clamp(3.4rem, 8.2vw, 7.2rem)",
+                letterSpacing: "-0.04em",
+                WebkitTextStroke: "1.5px rgba(120,175,255,0.52)",
+              }}
+            >
+              ${animated.toLocaleString("en-US")}
+            </div>
           </div>
-        </Reveal>
 
-        {/* layout: poster price (left) + spec inputs (right) */}
-        <div className="grid lg:grid-cols-[1.1fr_1fr] gap-px bg-[var(--border)] border border-[var(--border)]">
-          {/* === POSTER PRICE === */}
-          <Reveal>
-            <div className="relative p-8 sm:p-10 bg-[var(--bg)] min-h-[420px] flex flex-col"
-                 style={{ background: "linear-gradient(160deg, rgba(47,107,255,0.10), rgba(8,13,26,0.4)), var(--bg)" }}>
-              <div className="diag-stripes absolute inset-0 pointer-events-none" />
-              <div className="relative flex-1 flex flex-col">
-                <div className="flex items-center justify-between">
-                  <span className="mono-label">ORIENTATIVE TOTAL · USD</span>
-                  <span className="mono text-xs text-[var(--faint)]">
-                    LANE / {ORIGINS.find((x) => x.id === origin)?.label.toUpperCase()} → UA
-                  </span>
+          {/* LAYER 1 — the car, bleeding past the right edge */}
+          <div className="hidden sm:block absolute z-10 pointer-events-none bottom-[112px] right-[-20%] w-[74%] h-[250px]">
+            <div
+              className="absolute left-[10%] right-[12%] bottom-[2px] h-[26px]"
+              style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0.9), transparent 72%)", filter: "blur(10px)" }}
+            />
+            <div
+              className="absolute left-0 right-0 -bottom-4 h-[80px]"
+              style={{ background: "radial-gradient(ellipse 42% 55% at 50% 100%, rgba(70,145,255,0.55), transparent 70%)", filter: "blur(14px)" }}
+            />
+            <Image src="/images/calc-car.png" alt="" fill sizes="900px" className="object-contain object-bottom" />
+          </div>
+
+          {/* LAYER 2 — copy + controls */}
+          <div className="relative z-20 p-7 sm:p-10 flex flex-col min-h-[580px]">
+            <span className="eyebrow text-[var(--brand-bright)]">РОЗРАХУЙ ЗА 30 СЕКУНД</span>
+            <h2 className="h-title text-[1.8rem] sm:text-[2.3rem] mt-3 max-w-[15ch]">
+              Скільки коштує доставка <span className="text-gradient">вашого авто?</span>
+            </h2>
+
+            {/* phone: the layers become a stack — price, then the car, then the controls */}
+            <div className="sm:hidden mt-7">
+              <div className="text-[0.58rem] uppercase tracking-[0.2em] text-[var(--faint)] mb-1">
+                {o.label} → Україна · {d.label}
+              </div>
+              <div
+                className="mono font-medium tabular-nums leading-[0.9] text-transparent"
+                style={{
+                  fontSize: "clamp(2.6rem, 15vw, 4rem)",
+                  letterSpacing: "-0.04em",
+                  WebkitTextStroke: "1.3px rgba(120,175,255,0.6)",
+                }}
+              >
+                ${animated.toLocaleString("en-US")}
+              </div>
+              <div className="relative h-[132px] -mr-7 mt-2">
+                <div
+                  className="absolute left-[8%] right-[10%] bottom-[2px] h-[20px]"
+                  style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0.9), transparent 72%)", filter: "blur(8px)" }}
+                />
+                <Image src="/images/calc-car.png" alt="" fill sizes="420px" className="object-contain object-bottom object-right" />
+              </div>
+            </div>
+
+            {/* spec read-out — fills the gap, reads like a shipping manifest */}
+            <div className="mt-9 max-w-[300px] relative">
+              <span className="absolute -left-3 top-0 bottom-0 w-px bg-gradient-to-b from-[var(--brand-bright)] via-white/10 to-transparent" />
+              {[
+                { k: "Відстань", v: `≈ ${o.km} км` },
+                { k: "Термін", v: `${o.days} днів` },
+                { k: "Страхування", v: "включено" },
+              ].map((r) => (
+                <div
+                  key={r.k}
+                  className="flex items-baseline justify-between gap-4 py-2 border-b border-white/[0.06]"
+                >
+                  <span className="text-[0.6rem] uppercase tracking-[0.18em] text-[var(--faint)]">{r.k}</span>
+                  <span className="mono text-[0.82rem] text-[#c3d3ef] tabular-nums">{r.v}</span>
                 </div>
+              ))}
+            </div>
 
-                <div className="mt-auto">
-                  <div className="flex items-end gap-3">
-                    <span className="font-display font-extrabold leading-none text-gradient tabular-nums text-[4rem] sm:text-[5.5rem] lg:text-[6.5rem]">
-                      ${animated.toLocaleString("en-US")}
+            <div className="mt-auto pt-10 max-w-[540px]">
+              <div className="grid sm:grid-cols-3 gap-x-6 gap-y-5">
+                <Field label="Країна" value={origin} onChange={setOrigin} options={ORIGINS} />
+                <Field label="Доставка" value={delivery} onChange={setDelivery} options={DELIVERY} />
+                <Field label="Тип авто" value={type} onChange={setType} options={TYPES} />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-6">
+                {[
+                  { label: "Порт", val: port },
+                  { label: "Море", val: ocean },
+                  { label: "Митниця", val: customs },
+                ].map((r) => (
+                  <div key={r.label} className="flex items-baseline gap-1.5">
+                    <span className="text-[0.58rem] uppercase tracking-[0.18em] text-[var(--faint)]">{r.label}</span>
+                    <span className="font-display font-semibold tabular-nums text-sm">
+                      ${r.val.toLocaleString("en-US")}
                     </span>
-                    <span className="mono text-[var(--faint)] text-sm mb-3">/ ВІД</span>
                   </div>
-                  <div className="mt-2 mono text-sm text-[var(--muted)] tabular-nums">
-                    ETA · {days[0]}—{days[1]} ДНІВ
-                  </div>
-
-                  {/* breakdown — telemetry table */}
-                  <ul className="mt-7 divide-y divide-[var(--border)] border-y border-[var(--border)]">
-                    {[
-                      { code: "01", label: "ФРАХТ / OCEAN", val: freight },
-                      { code: "02", label: "ОФОРМЛЕННЯ / DDP", val: customs },
-                      { code: "03", label: "ДОСТАВКА / UA INLAND", val: local },
-                    ].map((row) => (
-                      <li key={row.code} className="grid grid-cols-[auto_1fr_auto] gap-4 items-baseline py-3">
-                        <span className="mono-label">{row.code}</span>
-                        <span className="text-sm text-[var(--text)]">{row.label}</span>
-                        <span className="mono font-semibold tabular-nums">${row.val.toLocaleString("en-US")}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                ))}
+                <button onClick={openLead} className="btn btn-primary justify-center w-full sm:w-auto !py-3 sm:!py-2.5 !px-5 !text-sm sm:ml-auto">
+                  Точний прорахунок <ArrowRight width={16} height={16} />
+                </button>
               </div>
             </div>
-          </Reveal>
-
-          {/* === INPUT SPEC === */}
-          <Reveal delay={120}>
-            <div className="p-8 sm:p-10 bg-[var(--bg)] h-full flex flex-col gap-7">
-              <Seg label="ORIGIN / ЗВІДКИ" value={origin} onChange={setOrigin} options={ORIGINS} />
-              <Seg label="VEHICLE / ТИП АВТО" value={type} onChange={setType} options={TYPES} />
-              <Seg label="DESTINATION / КУДИ" value={city} onChange={setCity} options={CITIES} />
-
-              <div className="mt-auto pt-4 border-t border-[var(--border)]">
-                <p className="mono text-[0.72rem] text-[var(--faint)] leading-relaxed mb-4">
-                  * Розрахунок не враховує комісії аукціону та індивідуальні умови
-                  страхування. Точний інвойс — у відповідь на заявку.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-2.5">
-                  <button onClick={openLead} className="btn btn-primary justify-center flex-1">
-                    Точний прорахунок <ArrowRight width={17} height={17} />
-                  </button>
-                  <a href={CONTACT.telegram} className="btn btn-ghost justify-center">
-                    Telegram <Send width={15} height={15} />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </Reveal>
+          </div>
         </div>
       </div>
     </section>

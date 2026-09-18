@@ -64,9 +64,15 @@ export const Star = (p: P) => (
 export const Menu = (p: P) => (
   <svg {...base(p)}><path d="M4 7h16M4 12h16M4 17h16" /></svg>
 );
+export const Play = (p: P) => (
+  <svg {...base({ ...p, fill: "currentColor", stroke: "none" })}><path d="M7 5v14l12-7z" /></svg>
+);
 export const X = (p: P) => (
   <svg {...base(p)}><path d="M6 6l12 12M18 6 6 18" /></svg>
 );
 export const Doc = (p: P) => (
   <svg {...base(p)}><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4M9 13h6M9 17h6" /></svg>
+);
+export const Mail = (p: P) => (
+  <svg {...base(p)}><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 7 8.5 6 8.5-6" /></svg>
 );

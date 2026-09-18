@@ -4,8 +4,8 @@
    AUTONEX — design tokens
    ============================================================ */
 :root {
-  --bg: #05070f;
-  --bg-2: #080d1a;
+  --bg: #070b16;
+  --bg-2: #0c1222;
   --surface: rgba(255, 255, 255, 0.03);
   --surface-2: rgba(255, 255, 255, 0.05);
   --border: rgba(255, 255, 255, 0.08);
@@ -40,6 +40,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -61,19 +62,8 @@ body {
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(900px 600px at 80% -5%, rgba(47, 107, 255, 0.18), transparent 60%),
-    radial-gradient(700px 500px at 0% 30%, rgba(47, 107, 255, 0.08), transparent 55%),
-    linear-gradient(180deg, #05070f 0%, #060a14 50%, #05070f 100%);
-}
-.page-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(circle at 50% 20%, black, transparent 75%);
+    radial-gradient(1100px 700px at 75% -10%, rgba(47, 107, 255, 0.10), transparent 62%),
+    linear-gradient(180deg, #070b16 0%, #080d1a 55%, #070b16 100%);
 }
 
 /* ============================================================
@@ -81,27 +71,23 @@ body {
    ============================================================ */
 .font-display {
   font-family: var(--font-display), system-ui, sans-serif;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 .h-title {
   font-family: var(--font-display), sans-serif;
-  font-weight: 800;
-  line-height: 0.98;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
 }
 .eyebrow {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-sans), sans-serif;
   font-weight: 700;
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 .text-gradient {
-  background: linear-gradient(100deg, var(--brand-bright), #8fb4ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--brand-bright);
 }
 
 /* ============================================================
@@ -115,18 +101,32 @@ body {
 }
 
 .card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
-  border: 1px solid var(--border);
+  background: linear-gradient(160deg, rgba(90, 130, 220, 0.07), rgba(10, 16, 34, 0.22));
+  border: 1px solid rgba(140, 175, 255, 0.13);
   border-radius: 20px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
+/* step artwork — dissolve the photo edges into the panel */
+.art-fade {
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 62%, rgba(0,0,0,0.35) 88%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 62%, rgba(0,0,0,0.35) 88%, transparent 100%);
+}
+
+/* section panel — the reference wraps each section in a rounded bordered panel */
+.panel {
+  background: rgba(13, 19, 34, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+}
+
 .card-hover {
   transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.35s, box-shadow 0.35s;
 }
 .card-hover:hover {
   transform: translateY(-6px);
-  border-color: var(--border-strong);
-  box-shadow: 0 20px 50px -20px rgba(47, 107, 255, 0.35);
+  border-color: rgba(120, 190, 255, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 28px 64px -26px rgba(47, 107, 255, 0.5);
 }
 
 .btn {
@@ -251,6 +251,7 @@ body {
   animation: marquee 28s linear infinite;
 }
 .marquee-mask {
+  overflow: hidden;
   mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
 }
 
@@ -558,8 +559,80 @@ body {
   transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
+/* ============================================================
+   2026 layer — liquid glass + neon (brand reference)
+   ============================================================ */
+:root {
+  --neon: #22d3ff;
+  --neon-blue: #3b82ff;
+}
+
+/* liquid-glass panel */
+.glass {
+  background: linear-gradient(160deg, rgba(90, 130, 220, 0.14), rgba(10, 16, 34, 0.34));
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(140, 175, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 24px 60px -30px rgba(0, 0, 0, 0.8);
+}
+.glass-hover {
+  transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s;
+}
+.glass-hover:hover {
+  border-color: rgba(120, 190, 255, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 30px 70px -28px rgba(47, 107, 255, 0.5);
+  transform: translateY(-4px);
+}
+
+/* neon glow helpers */
+.neon-text {
+  text-shadow: none;
+}
+.neon-line {
+  box-shadow: 0 0 12px rgba(47, 130, 255, 0.7), 0 0 30px rgba(34, 211, 255, 0.4);
+}
+.neon-ring {
+  box-shadow: none;
+}
+
+/* chrome gradient text (logo-style) */
+.chrome {
+  background: linear-gradient(180deg, #ffffff 0%, #cfe0ff 42%, #6f9dff 60%, #2f6bff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* deeper hero backdrop */
+.hero-dark {
+  background:
+    radial-gradient(80% 60% at 50% 30%, rgba(23, 60, 150, 0.35), transparent 60%),
+    radial-gradient(60% 50% at 80% 80%, rgba(34, 211, 255, 0.12), transparent 60%),
+    linear-gradient(180deg, #04060d 0%, #05070f 60%, #04060d 100%);
+}
+
+@keyframes floaty-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.floaty-soft { animation: floaty-soft 7s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .floaty-soft { animation: none !important; }
+}
+
 /* scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: #05070f; }
 ::-webkit-scrollbar-thumb { background: #1a2336; border-radius: 6px; }
 ::-webkit-scrollbar-thumb:hover { background: #26324c; }
+
+/* horizontal snap strips on phones */
+.snap-strip {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+}
+.snap-strip::-webkit-scrollbar {
+  display: none;
+}

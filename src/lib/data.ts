@@ -1,129 +1,96 @@
 export const CONTACT = {
   phone: "+38 (098) 123 45 67",
   phoneHref: "tel:+380981234567",
-  email: "info@autonex.com",
+  email: "info@autonex.ua",
   telegram: "https://t.me/autonex",
 };
 
 export const NAV = [
-  { label: "Послуги", href: "#services" },
-  { label: "Як це працює", href: "#how" },
-  { label: "Калькулятор", href: "#calc" },
   { label: "Про нас", href: "#why" },
+  { label: "Послуги", href: "#services" },
+  { label: "Процес", href: "#how" },
+  { label: "Кейси", href: "#cases" },
   { label: "Відгуки", href: "#reviews" },
   { label: "Контакти", href: "#contacts" },
 ];
 
 export const HERO_STATS = [
-  { value: "5–7 днів", label: "по Європі" },
-  { value: "25–35 днів", label: "зі США" },
-  { value: "500+ авто", label: "доставлено" },
+  { img: "/images/icons/clock.webp", value: "35 днів", label: "до ключів" },
+  { img: "/images/icons/shield.webp", value: "100%", label: "застраховано" },
+  { img: "/images/icons/globe.webp", value: "24/7", label: "підтримка" },
+  { img: "/images/icons/hauler.webp", value: "Власна", label: "логістика" },
+  { img: "/images/icons/pin.webp", value: "Відстеження", label: "на кожному етапі" },
 ];
 
 export const STEPS = [
   {
     n: "01",
-    stage: "STAGE / AUCTION",
-    day: "ДЕНЬ 0",
+    img: "/images/process/01-auction.png",
     title: "Купівля на аукціоні",
-    text: "Copart, IAAI, Manheim або європейські майданчики. Брокеримо ставку, перевіряємо лот, фіксуємо всі збори перед оплатою.",
-    meta: ["Перевірка VIN", "Аналіз пошкоджень", "Прозорі збори"],
+    text: "Підбираємо авто та викуповуємо для вас на Copart, IAAI чи в Європі.",
   },
   {
     n: "02",
-    stage: "STAGE / INLAND",
-    day: "ДЕНЬ 1–7",
-    title: "Забір і консолідація",
-    text: "Аукціонний майданчик → склад у порту. Робимо фото-звіт перед завантаженням і фіксуємо стан авто.",
-    meta: ["Inland-trucking", "Фото-звіт", "Зберігання до 30 днів"],
+    img: "/images/process/02-inspection.png",
+    title: "Інспекція та перевірка",
+    text: "Повна перевірка авто та фото-звіт перед відправкою.",
   },
   {
     n: "03",
-    stage: "STAGE / OCEAN",
-    day: "ДЕНЬ 8–25",
-    title: "Океан / контейнер / RoRo",
-    text: "Контейнерна або RoRo-лінія до європейського порту. Трекінг судна в реальному часі.",
-    meta: ["MSC · Maersk", "Страхування вантажу", "GPS-трекінг"],
+    img: "/images/process/03-port.png",
+    title: "Доставка в порт",
+    text: "Підготовка та транспортування до порту відправлення.",
   },
   {
     n: "04",
-    stage: "STAGE / DELIVERY",
-    day: "ДЕНЬ 26–35",
-    title: "Розмитнення і видача",
-    text: "Український кордон, повне DDP-оформлення, доставка автовозом у ваше місто. Передача з актом.",
-    meta: ["DDP під ключ", "Доставка авто-возом", "Акт приймання"],
+    img: "/images/process/04-ocean.png",
+    title: "Морське перевезення",
+    text: "RoRo або контейнер — на ваш вибір, з трекінгом судна.",
+  },
+  {
+    n: "05",
+    img: "/images/process/05-delivery.png",
+    title: "Митниця та доставка",
+    text: "Розмитнення під ключ та доставка до ваших дверей.",
   },
 ];
 
-export const FEATURES = [
-  { code: "01", icon: "Doc",       title: "Прозора ціна",      text: "Фіксуємо вартість на старті — жодних прихованих платежів і сюрпризів у дорозі.", spec: "FIXED PRICE" },
-  { code: "02", icon: "Bolt",      title: "Швидка доставка",   text: "Оптимальні маршрути й реальні терміни без простоїв на майданчиках.",            spec: "OPTIMIZED ROUTING" },
-  { code: "03", icon: "Eye",       title: "Онлайн-трекінг",    text: "GPS-трекінг судна та автовоза, фото-звіти з кожного етапу.",                    spec: "24/7 LIVE GPS" },
-  { code: "04", icon: "Headset",   title: "Менеджер 24/7",     text: "Персональний менеджер веде вашу угоду від ставки до видачі ключів.",            spec: "1 DEAL = 1 MANAGER" },
-  { code: "05", icon: "Handshake", title: "B2B-умови",         text: "Окремі тарифи й обʼєми для перекупів, автосалонів та постійних партнерів.",     spec: "VOLUME TARIFFS" },
-  { code: "06", icon: "Shield",    title: "Повний контроль",   text: "Страхування вантажу й юридичний супровід на всіх кордонах і митницях.",          spec: "INSURED · LEGAL" },
+export const LOGISTICS_POINTS = [
+  "Власна мережа партнерів",
+  "Прямі контракти з перевізниками",
+  "Найкращі ціни без націнок",
+  "Повна відповідальність за результат",
 ];
 
-export const AUDIENCE = [
-  {
-    tag: "Приватні клієнти",
-    title: "Авто для себе",
-    text: "Без стресу пригоніть свою машину мрії — ми беремо всі клопоти на себе.",
-  },
-  {
-    tag: "Перекупи та майданчики",
-    title: "Стабільний партнер",
-    text: "Прогнозовані терміни й тарифи для вашого бізнесу та обороту.",
-  },
-  {
-    tag: "Бізнес",
-    title: "Масштаб логістики",
-    text: "Парки, спецтехніка, регулярні поставки — будуємо логістику під вас.",
-  },
+export const ADVANTAGES = [
+  { icon: "Truck", title: "Автовози та RoRo", text: "Сучасні перевізники та безпечне транспортування." },
+  { icon: "Shield", title: "Повне страхування", text: "Ваше авто застраховане на всьому шляху." },
+  { icon: "Doc", title: "Прозорі умови", text: "Без прихованих платежів та неочікуваних витрат." },
+  { icon: "Headset", title: "Підтримка 24/7", text: "Ми завжди на зв'язку на кожному етапі." },
+];
+
+export const CASES = [
+  { model: "BMW X5", year: "2021", country: "Німеччина", flag: "🇩🇪", img: "/images/cars/bmw-x5.webp", price: "$1,920", days: "31 день" },
+  { model: "Audi A6", year: "2020", country: "Польща", flag: "🇵🇱", img: "/images/cars/audi-a6.webp", price: "$1,650", days: "29 днів" },
+  { model: "Toyota Camry", year: "2021", country: "США", flag: "🇺🇸", img: "/images/cars/toyota-camry.webp", price: "$2,480", days: "34 дні" },
 ];
 
 export const REVIEWS = [
-  {
-    name: "Олександр",
-    city: "Київ",
-    avatar: "/images/av2.jpg",
-    rating: 5,
-    text: "Доставили BMW X5 за 29 днів. Все було без затримок, звіти приходили щодня. Рекомендую!",
-  },
-  {
-    name: "Максим",
-    city: "перекуп",
-    avatar: "/images/av4.jpg",
-    rating: 5,
-    text: "Працюю з AUTONEX вже 8 місяців. Найкращі в справі — терміни й ціни тримають завжди.",
-  },
-  {
-    name: "Ірина",
-    city: "Львів",
-    avatar: "/images/avf2.jpg",
-    rating: 5,
-    text: "Везли авто з Європи, була невелика затримка на кордоні, але підтримка тримала в курсі. Дякую!",
-  },
-  {
-    name: "Дмитро",
-    city: "Одеса",
-    avatar: "/images/av3.jpg",
-    rating: 5,
-    text: "Розмитнення під ключ — це те, що врятувало мені купу часу. Все офіційно й прозоро.",
-  },
+  { name: "Олександр", city: "Київ", rating: 5, avatar: "/images/av2.jpg", text: "Все пройшло ідеально! Авто отримав швидше, ніж очікував. Рекомендую!" },
+  { name: "Максим", city: "перекуп", rating: 5, avatar: "/images/avf2.jpg", text: "Працюю з AUTONEX вже 8 місяців. Найкращі в справі — терміни й ціни тримають." },
+  { name: "Ірина", city: "Львів", rating: 5, avatar: "/images/av5.jpg", text: "Везли авто з Європи, невелика затримка на кордоні, але підтримка тримала в курсі." },
+  { name: "Дмитро", city: "Одеса", rating: 5, avatar: "/images/av2.jpg", text: "Розмитнення під ключ врятувало купу часу. Все офіційно й прозоро." },
 ];
 
-export const BIG_STATS = [
-  { value: "500+", label: "доставлених авто" },
-  { value: "12+", label: "країн доставки" },
-  { value: "4+", label: "роки на ринку" },
-  { value: "98%", label: "клієнтів повертається" },
+export const TRACK_STEPS = [
+  { code: "Купівля", state: "done" },
+  { code: "В дорозі в порт", state: "done" },
+  { code: "Морське перевезення", state: "active" },
+  { code: "Митниця", state: "wait" },
+  { code: "Доставка", state: "wait" },
 ];
 
-export const FOOTER_SERVICES = [
-  "Доставка з США",
-  "Доставка з Європи",
-  "Аукціонні послуги",
-  "Страхування",
-];
-export const FOOTER_COMPANY = ["Про нас", "Як це працює", "Відгуки", "Контакти"];
+export const COUNTRIES = ["DE", "PL", "NL", "BE", "FR", "IT", "CZ", "LT"];
+
+export const FOOTER_SERVICES = ["Доставка з Європи", "Доставка з США", "Аукціонні послуги", "Страхування"];
+export const FOOTER_COMPANY = ["Про нас", "Процес", "Кейси", "Контакти"];

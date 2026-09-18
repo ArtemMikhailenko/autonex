@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Logo, LogoMark } from "./Logo";
-import { Phone, Send, Menu, X } from "./icons";
-import { NAV, CONTACT } from "@/lib/data";
+import Image from "next/image";
+import { Menu, X, ArrowRight } from "./icons";
+import { NAV } from "@/lib/data";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -24,15 +24,17 @@ export function Header() {
     <header
       className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
       style={{
-        background: scrolled ? "rgba(5,7,15,0.78)" : "transparent",
-        backdropFilter: scrolled ? "blur(14px)" : "none",
-        borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
+        background: scrolled ? "rgba(7,11,22,0.96)" : "rgba(7,11,22,0.9)",
+        backdropFilter: "blur(16px) saturate(140%)",
+        borderBottom: "1px solid rgba(140,175,255,0.14)",
+        boxShadow: scrolled ? "0 10px 30px -18px rgba(0,0,0,0.9)" : "none",
       }}
     >
       <div className="container-x flex items-center justify-between h-[72px]">
-        <a href="#top" className="flex items-center gap-2.5 shrink-0">
-          <LogoMark size={32} />
-          <Logo className="text-[1.35rem]" />
+        <a href="#top" className="flex items-center shrink-0" aria-label="AUTONEX Logistics">
+          <span className="relative block h-[56px] w-[86px] shrink-0">
+            <Image src="/images/logo-full.png" alt="AUTONEX Logistics" fill priority sizes="86px" className="object-contain mix-blend-screen" />
+          </span>
         </a>
 
         <nav className="hidden lg:flex items-center gap-1">
@@ -48,16 +50,8 @@ export function Header() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-3">
-          <a
-            href={CONTACT.phoneHref}
-            className="flex items-center gap-2 text-[0.92rem] font-semibold text-[var(--text)] hover:text-[var(--brand-bright)] transition-colors"
-          >
-            <Phone width={18} height={18} className="text-[var(--brand-bright)]" />
-            {CONTACT.phone}
-          </a>
-          <button data-lead className="btn btn-primary !py-2.5 !px-4 !text-sm">
-            Залишити заявку
-            <Send width={16} height={16} />
+          <button data-lead data-lead-context="Хедер" className="btn btn-primary !py-2.5 !px-5 !text-sm">
+            Розрахувати вартість <ArrowRight width={16} height={16} />
           </button>
         </div>
 
@@ -75,7 +69,7 @@ export function Header() {
         className={`lg:hidden overflow-hidden transition-[max-height] duration-400 ${
           open ? "max-h-[480px]" : "max-h-0"
         }`}
-        style={{ background: "rgba(5,7,15,0.96)", backdropFilter: "blur(14px)" }}
+        style={{ background: "rgba(7,11,22,0.98)", backdropFilter: "blur(14px)" }}
       >
         <nav className="container-x py-5 flex flex-col gap-1">
           {NAV.map((n) => (
@@ -88,14 +82,14 @@ export function Header() {
               {n.label}
             </a>
           ))}
-          <div className="flex flex-col gap-2.5 pt-4">
-            <a href={CONTACT.phoneHref} className="btn btn-ghost justify-center">
-              <Phone width={18} height={18} /> {CONTACT.phone}
-            </a>
-            <button data-lead onClick={() => setOpen(false)} className="btn btn-primary justify-center">
-              Залишити заявку <Send width={16} height={16} />
-            </button>
-          </div>
+          <button
+            data-lead
+            data-lead-context="Мобільне меню"
+            onClick={() => setOpen(false)}
+            className="btn btn-primary justify-center mt-4"
+          >
+            Розрахувати вартість <ArrowRight width={16} height={16} />
+          </button>
         </nav>
       </div>
     </header>

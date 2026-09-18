@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Montserrat, IBM_Plex_Mono } from "next/font/google";
+import { Manrope, Unbounded, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/SmoothScroll";
 
@@ -10,10 +10,10 @@ const sans = Manrope({
   display: "swap",
 });
 
-const display = Montserrat({
+const display = Unbounded({
   variable: "--font-display",
   subsets: ["latin", "cyrillic"],
-  weight: ["600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -53,10 +53,6 @@ export default function RootLayout({
         <div className="page-bg" aria-hidden />
         <SmoothScroll />
         {children}
-        <div className="fx-overlay" aria-hidden>
-          <div className="fx-grain" />
-          <div className="fx-vignette" />
-        </div>
       </body>
     </html>
   );

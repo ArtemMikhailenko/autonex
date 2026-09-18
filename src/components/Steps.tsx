@@ -1,63 +1,145 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
 import { STEPS } from "@/lib/data";
 import { Reveal } from "./Reveal";
+import { ArrowRight } from "./icons";
 
 export function Steps() {
+  const [active, setActive] = useState(0);
+
   return (
-    <section id="how" className="relative py-20 lg:py-28">
+    <section id="how" className="py-5 scroll-mt-24">
       <div className="container-x">
-        {/* editorial header — left-aligned, spec sheet vibe */}
-        <Reveal>
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
-            <div>
-              <span className="mono-label flex items-center gap-2.5">
-                <span className="slash" aria-hidden />
-                METHOD / 04 STAGES
-              </span>
-              <h2 className="h-title text-[2rem] sm:text-[2.8rem] lg:text-[3.4rem] mt-3 max-w-xl">
-                Від ставки до<br />ключів — <span className="text-gradient">35 днів</span>
-              </h2>
+        <div className="panel p-7 sm:p-10 lg:p-12">
+          {/* header */}
+          <Reveal>
+            <div className="grid lg:grid-cols-[1fr_auto] gap-6 items-end mb-10 lg:mb-12">
+              <div>
+                <span className="eyebrow text-[var(--muted)]">ПРОЦЕС ДОСТАВКИ</span>
+                <h2 className="h-title text-[2rem] sm:text-[2.6rem] mt-3">
+                  <span className="lg:whitespace-nowrap">Від ставки до ключів —</span>
+                  <br />
+                  <span className="text-gradient">35 днів</span>
+                </h2>
+              </div>
+              <p className="text-[var(--muted)] max-w-none sm:max-w-sm lg:text-right leading-relaxed">
+                Повний цикл під ключ без зайвих турбот. Ви отримуєте авто — ми беремо
+                на себе все інше.
+              </p>
             </div>
-            <p className="mono text-sm text-[var(--muted)] max-w-xs leading-relaxed">
-              Процес розписаний по днях. На кожному етапі — звіт, документи й конкретна
-              людина-відповідальний.
-            </p>
-          </div>
-        </Reveal>
+          </Reveal>
 
-        {/* documentary spec sheet — not a grid of equal cards */}
-        <div className="relative">
-          {STEPS.map((s, i) => (
-            <Reveal key={s.n} delay={i * 70}>
-              <article className="relative grid grid-cols-1 lg:grid-cols-[110px_1fr_minmax(200px,280px)] gap-x-8 gap-y-3 py-8 lg:py-10 border-t border-[var(--border)] first:border-t-0 group">
-                {/* big outlined index */}
-                <div className="flex items-baseline gap-3">
-                  <span className="idx text-[3.5rem] sm:text-[4.5rem] lg:text-[5.2rem] transition-all group-hover:[-webkit-text-stroke-color:var(--brand-bright)]">
-                    {s.n}
-                  </span>
-                </div>
+          {/* ===== desktop: expanding panels ===== */}
+          <Reveal>
+            <div className="hidden lg:flex gap-2.5 h-[460px]">
+              {STEPS.map((s, i) => {
+                const isActive = active === i;
+                return (
+                  <div
+                    key={s.n}
+                    onMouseEnter={() => setActive(i)}
+                    onClick={() => setActive(i)}
+                    className={`group relative rounded-2xl overflow-hidden cursor-pointer border transition-all duration-[650ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                      isActive
+                        ? "flex-[4.2] border-[rgba(120,190,255,0.45)]"
+                        : "flex-[1] border-[rgba(255,255,255,0.07)]"
+                    }`}
+                  >
+                    <Image
+                      src={s.img}
+                      alt={s.title}
+                      fill
+                      sizes={isActive ? "60vw" : "14vw"}
+                      className={`object-cover transition-transform duration-[900ms] ${
+                        isActive ? "scale-100" : "scale-[1.35]"
+                      }`}
+                    />
+                    {/* scrim */}
+                    <div
+                      className="absolute inset-0 transition-opacity duration-500"
+                      style={{
+                        background: isActive
+                          ? "linear-gradient(180deg, rgba(7,11,22,0.15) 0%, rgba(7,11,22,0.25) 45%, rgba(7,11,22,0.93) 100%)"
+                          : "linear-gradient(180deg, rgba(7,11,22,0.65) 0%, rgba(7,11,22,0.88) 100%)",
+                      }}
+                    />
 
-                {/* main body */}
-                <div>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-3">
-                    <span className="mono-label !text-[var(--brand-bright)]">{s.stage}</span>
-                    <span className="mono text-xs text-[var(--faint)]">/ {s.day}</span>
+                    {/* number — always visible, top */}
+                    <span
+                      className={`absolute top-5 left-0 right-0 font-display font-bold tabular-nums leading-none transition-all duration-500 ${
+                        isActive
+                          ? "text-[2.4rem] text-[var(--brand-bright)] text-left pl-7"
+                          : "text-[1.8rem] text-[#8fb2ee]/80 text-center"
+                      }`}
+                    >
+                      {s.n}
+                    </span>
+
+                    {/* collapsed: vertical title */}
+                    <div
+                      className={`absolute inset-x-0 bottom-7 flex justify-center transition-opacity duration-300 ${
+                        isActive ? "opacity-0 pointer-events-none" : "opacity-100"
+                      }`}
+                    >
+                      <span
+                        className="font-display font-semibold text-[0.95rem] text-[#dbe6fb] tracking-wide"
+                        style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+                      >
+                        {s.title}
+                      </span>
+                    </div>
+
+                    {/* expanded: full caption */}
+                    <div
+                      className={`absolute inset-x-0 bottom-0 p-7 transition-all duration-500 ${
+                        isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+                      }`}
+                    >
+                      <h3 className="font-display font-bold text-2xl">{s.title}</h3>
+                      <p className="text-[#c3d3ef] text-[0.95rem] mt-2.5 max-w-md leading-relaxed">
+                        {s.text}
+                      </p>
+                      <span className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--brand-bright)] mt-4">
+                        Детальніше <ArrowRight width={15} height={15} />
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="font-display font-bold text-2xl sm:text-3xl">{s.title}</h3>
-                  <p className="text-[var(--muted)] mt-3 leading-relaxed max-w-xl">{s.text}</p>
-                </div>
+                );
+              })}
+            </div>
+          </Reveal>
 
-                {/* spec meta column */}
-                <ul className="lg:pl-6 lg:border-l border-[var(--border)] space-y-2 self-center">
-                  {s.meta.map((m) => (
-                    <li key={m} className="flex items-baseline gap-2.5 mono text-[0.78rem] text-[var(--muted)]">
-                      <span className="text-[var(--brand-bright)]">›</span>
-                      {m}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            </Reveal>
-          ))}
+          {/* progress rail */}
+          <div className="hidden lg:flex gap-2.5 mt-5">
+            {STEPS.map((s, i) => (
+              <span
+                key={s.n}
+                className={`h-[3px] rounded-full transition-all duration-[650ms] ${
+                  active === i ? "flex-[4.2] bg-[var(--brand-bright)]" : "flex-[1] bg-white/12"
+                }`}
+                style={active === i ? { boxShadow: "0 0 12px rgba(47,130,255,0.8)" } : undefined}
+              />
+            ))}
+          </div>
+
+          {/* ===== phone: swipe strip. five stacked cards was a 1700px wall ===== */}
+          <div className="lg:hidden snap-strip flex sm:grid sm:grid-cols-2 gap-4 sm:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory -mx-7 px-7 sm:mx-0 sm:px-0 pb-1">
+            {STEPS.map((s, i) => (
+              <Reveal key={s.n} delay={i * 70} className="snap-start shrink-0 w-[78%] sm:w-auto">
+                <article className="relative rounded-2xl overflow-hidden border border-[var(--border)] h-[290px] sm:h-[250px]">
+                  <Image src={s.img} alt={s.title} fill sizes="(max-width:640px) 78vw, 45vw" className="object-cover" />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(7,11,22,0.2) 0%, rgba(7,11,22,0.92) 100%)" }} />
+                  <span className="absolute top-4 left-5 font-display font-bold text-2xl text-[var(--brand-bright)] tabular-nums">{s.n}</span>
+                  <div className="absolute inset-x-0 bottom-0 p-5">
+                    <h3 className="font-display font-bold text-lg">{s.title}</h3>
+                    <p className="text-[#c3d3ef] text-sm mt-1.5 leading-relaxed">{s.text}</p>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </div>
     </section>

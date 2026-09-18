@@ -7,7 +7,7 @@ const SECTIONS = [
   { id: "how", n: "02" },
   { id: "calc", n: "03" },
   { id: "why", n: "04" },
-  { id: "services", n: "05" },
+  { id: "cases", n: "05" },
   { id: "reviews", n: "06" },
   { id: "contacts", n: "07" },
 ];

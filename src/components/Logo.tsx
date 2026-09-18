@@ -2,16 +2,32 @@ export function LogoMark({ size = 36 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden>
       <defs>
-        <linearGradient id="lm-blade" x1="6" y1="42" x2="42" y2="6" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#4f8bff" />
-          <stop offset="1" stopColor="#1640b8" />
+        <radialGradient id="lm-globe" cx="0.4" cy="0.35" r="0.75">
+          <stop stopColor="#6aa2ff" />
+          <stop offset="0.55" stopColor="#2f6bff" />
+          <stop offset="1" stopColor="#0d2456" />
+        </radialGradient>
+        <linearGradient id="lm-ring" x1="4" y1="34" x2="44" y2="14" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#ffffff" />
+          <stop offset="0.5" stopColor="#22d3ff" />
+          <stop offset="1" stopColor="#2f6bff" />
         </linearGradient>
+        <filter id="lm-glow" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="0" stdDeviation="2.2" floodColor="#2f8bff" floodOpacity="0.9" />
+        </filter>
       </defs>
-      {/* angular blade "A / arrow" mark, brandbook style */}
-      <path d="M22 4 L34 4 L16 44 L4 44 Z" fill="#e9eefc" />
-      <path d="M30 4 L44 4 L26 44 L12 44 Z" fill="url(#lm-blade)" />
-      {/* notch cut */}
-      <path d="M21 26 L33 26 L29 36 L17 36 Z" fill="#05070f" />
+      <g filter="url(#lm-glow)">
+        {/* globe */}
+        <circle cx="24" cy="23" r="14" fill="url(#lm-globe)" stroke="#8fbaff" strokeWidth="1" strokeOpacity="0.7" />
+        {/* meridians */}
+        <ellipse cx="24" cy="23" rx="6" ry="14" stroke="#cfe2ff" strokeWidth="0.9" strokeOpacity="0.75" />
+        <path d="M11 18 H37 M11 28 H37" stroke="#cfe2ff" strokeWidth="0.9" strokeOpacity="0.65" />
+        {/* orbit ring */}
+        <ellipse cx="24" cy="25" rx="21" ry="8" stroke="url(#lm-ring)" strokeWidth="3" transform="rotate(-24 24 25)" />
+        {/* location pin */}
+        <circle cx="28" cy="15" r="2.8" fill="#ffffff" />
+        <circle cx="28" cy="15" r="2.8" fill="none" stroke="#22d3ff" strokeWidth="1" />
+      </g>
     </svg>
   );
 }
