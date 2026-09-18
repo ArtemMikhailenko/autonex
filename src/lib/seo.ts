@@ -1,9 +1,10 @@
 import { CONTACT } from "./data";
 
-/* Domain comes from the deploy env; the fallback matches the address on the
-   contact block (info@autonex.ua) so nothing breaks before it is set. */
+/* Current home is the Vercel preview domain. Set NEXT_PUBLIC_SITE_URL in the
+   deploy env when the real domain is ready — canonical, Open Graph, sitemap
+   and robots all read from here. */
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://autonex.ua"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://autonex-sigma.vercel.app"
 ).replace(/\/$/, "");
 
 export const SITE_NAME = "AUTONEX Logistics";
