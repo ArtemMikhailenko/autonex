@@ -112,7 +112,7 @@ export function Calculator() {
           />
 
           {/* LAYER 0 — oversized outlined price, sits BEHIND the car */}
-          <div className="hidden sm:block absolute right-10 top-14 z-0 text-right select-none pointer-events-none">
+          <div className="hidden lg:block absolute right-10 top-14 z-0 text-right select-none pointer-events-none">
             <div className="text-[0.6rem] uppercase tracking-[0.2em] text-[var(--faint)] mb-1">
               {o.label} → Україна · {d.label}
             </div>
@@ -129,7 +129,7 @@ export function Calculator() {
           </div>
 
           {/* LAYER 1 — the car, bleeding past the right edge */}
-          <div className="hidden sm:block absolute z-10 pointer-events-none bottom-[112px] right-[-20%] w-[74%] h-[250px]">
+          <div className="hidden lg:block absolute z-10 pointer-events-none bottom-[112px] right-[-30%] 2xl:right-[-20%] w-[74%] h-[250px]">
             <div
               className="absolute left-[10%] right-[12%] bottom-[2px] h-[26px]"
               style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0.9), transparent 72%)", filter: "blur(10px)" }}
@@ -149,7 +149,7 @@ export function Calculator() {
             </h2>
 
             {/* phone: the layers become a stack — price, then the car, then the controls */}
-            <div className="sm:hidden mt-7">
+            <div className="lg:hidden mt-7">
               <div className="text-[0.58rem] uppercase tracking-[0.2em] text-[var(--faint)] mb-1">
                 {o.label} → Україна · {d.label}
               </div>
@@ -190,8 +190,8 @@ export function Calculator() {
               ))}
             </div>
 
-            <div className="mt-auto pt-10 max-w-[540px]">
-              <div className="grid sm:grid-cols-3 gap-x-6 gap-y-5">
+            <div className="mt-auto pt-10 max-w-[440px] 2xl:max-w-[540px]">
+              <div className="grid sm:grid-cols-2 2xl:grid-cols-3 gap-x-6 gap-y-5">
                 <Field label="Країна" value={origin} onChange={setOrigin} options={ORIGINS} />
                 <Field label="Доставка" value={delivery} onChange={setDelivery} options={DELIVERY} />
                 <Field label="Тип авто" value={type} onChange={setType} options={TYPES} />

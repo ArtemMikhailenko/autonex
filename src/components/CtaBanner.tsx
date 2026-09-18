@@ -70,7 +70,7 @@ export function CtaBanner() {
 
                 <a
                   href={CONTACT.phoneHref}
-                  className="inline-flex flex-col items-start gap-1.5 sm:flex-row sm:items-baseline sm:gap-3 mt-7 group"
+                  className="inline-flex flex-col items-start gap-1.5 sm:flex-row sm:items-baseline sm:gap-3 mt-7 py-1.5 group"
                 >
                   <span className="mono text-[0.6rem] uppercase tracking-[0.2em] text-[var(--faint)]">
                     або подзвоніть

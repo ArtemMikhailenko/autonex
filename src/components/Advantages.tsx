@@ -83,7 +83,7 @@ export function Advantages() {
                       }`}
                     >
                       <Icon width={19} height={19} className="text-[var(--brand-bright)]" />
-                      <h3 className="font-display font-semibold text-[0.92rem] sm:text-[1.02rem] leading-snug mt-3">{a.title}</h3>
+                      <h3 className="font-display font-semibold text-[0.92rem] sm:text-[1.02rem] leading-snug mt-3 sm:min-h-[2.6em]">{a.title}</h3>
                       <p className="text-[var(--muted)] text-[0.8rem] sm:text-sm mt-1.5 leading-relaxed">{a.text}</p>
                     </div>
                   </Reveal>

@@ -125,11 +125,11 @@ export function Steps() {
           </div>
 
           {/* ===== phone: swipe strip. five stacked cards was a 1700px wall ===== */}
-          <div className="lg:hidden snap-strip flex sm:grid sm:grid-cols-2 gap-4 sm:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory -mx-7 px-7 sm:mx-0 sm:px-0 pb-1">
+          <div className="lg:hidden snap-strip flex gap-4 sm:gap-5 overflow-x-auto snap-x snap-mandatory -mx-7 px-7 sm:-mx-10 sm:px-10 pb-1">
             {STEPS.map((s, i) => (
-              <Reveal key={s.n} delay={i * 70} className="snap-start shrink-0 w-[78%] sm:w-auto">
+              <Reveal key={s.n} delay={i * 70} className="snap-start shrink-0 w-[78%] sm:w-[48%] md:w-[38%]">
                 <article className="relative rounded-2xl overflow-hidden border border-[var(--border)] h-[290px] sm:h-[250px]">
-                  <Image src={s.img} alt={s.title} fill sizes="(max-width:640px) 78vw, 45vw" className="object-cover" />
+                  <Image src={s.img} alt={s.title} fill sizes="(max-width:640px) 78vw, 40vw" className="object-cover" />
                   <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(7,11,22,0.2) 0%, rgba(7,11,22,0.92) 100%)" }} />
                   <span className="absolute top-4 left-5 font-display font-bold text-2xl text-[var(--brand-bright)] tabular-nums">{s.n}</span>
                   <div className="absolute inset-x-0 bottom-0 p-5">
