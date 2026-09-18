@@ -32,7 +32,7 @@ export function Footer() {
             <a href="#top" className="inline-flex" aria-label="AUTONEX Logistics">
               <span className="relative block h-[64px] w-[98px]">
                 <Image
-                  src="/images/logo-full.png"
+                  src="/images/logo-full.webp"
                   alt="AUTONEX Logistics"
                   fill
                   sizes="98px"

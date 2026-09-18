@@ -25,31 +25,31 @@ export const HERO_STATS = [
 export const STEPS = [
   {
     n: "01",
-    img: "/images/process/01-auction.png",
+    img: "/images/process/01-auction.webp",
     title: "Купівля на аукціоні",
     text: "Підбираємо авто та викуповуємо для вас на Copart, IAAI чи в Європі.",
   },
   {
     n: "02",
-    img: "/images/process/02-inspection.png",
+    img: "/images/process/02-inspection.webp",
     title: "Інспекція та перевірка",
     text: "Повна перевірка авто та фото-звіт перед відправкою.",
   },
   {
     n: "03",
-    img: "/images/process/03-port.png",
+    img: "/images/process/03-port.webp",
     title: "Доставка в порт",
     text: "Підготовка та транспортування до порту відправлення.",
   },
   {
     n: "04",
-    img: "/images/process/04-ocean.png",
+    img: "/images/process/04-ocean.webp",
     title: "Морське перевезення",
     text: "RoRo або контейнер — на ваш вибір, з трекінгом судна.",
   },
   {
     n: "05",
-    img: "/images/process/05-delivery.png",
+    img: "/images/process/05-delivery.webp",
     title: "Митниця та доставка",
     text: "Розмитнення під ключ та доставка до ваших дверей.",
   },

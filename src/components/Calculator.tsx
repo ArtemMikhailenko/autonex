@@ -138,7 +138,7 @@ export function Calculator() {
               className="absolute left-0 right-0 -bottom-4 h-[80px]"
               style={{ background: "radial-gradient(ellipse 42% 55% at 50% 100%, rgba(70,145,255,0.55), transparent 70%)", filter: "blur(14px)" }}
             />
-            <Image src="/images/calc-car.png" alt="" fill sizes="900px" className="object-contain object-bottom" />
+            <Image src="/images/calc-car.webp" alt="" fill sizes="900px" className="object-contain object-bottom" />
           </div>
 
           {/* LAYER 2 — copy + controls */}
@@ -168,7 +168,7 @@ export function Calculator() {
                   className="absolute left-[8%] right-[10%] bottom-[2px] h-[20px]"
                   style={{ background: "radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0.9), transparent 72%)", filter: "blur(8px)" }}
                 />
-                <Image src="/images/calc-car.png" alt="" fill sizes="420px" className="object-contain object-bottom object-right" />
+                <Image src="/images/calc-car.webp" alt="" fill sizes="420px" className="object-contain object-bottom object-right" />
               </div>
             </div>
 

@@ -147,7 +147,7 @@ export function LeadDialog() {
             <>
               <span className="relative block h-11 w-[68px]">
                 <Image
-                  src="/images/logo-full.png"
+                  src="/images/logo-full.webp"
                   alt="AUTONEX"
                   fill
                   sizes="68px"

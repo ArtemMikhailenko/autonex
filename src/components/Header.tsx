@@ -33,7 +33,7 @@ export function Header() {
       <div className="container-x flex items-center justify-between h-[72px]">
         <a href="#top" className="flex items-center shrink-0" aria-label="AUTONEX Logistics">
           <span className="relative block h-[56px] w-[86px] shrink-0">
-            <Image src="/images/logo-full.png" alt="AUTONEX Logistics" fill priority sizes="86px" className="object-contain mix-blend-screen" />
+            <Image src="/images/logo-full.webp" alt="AUTONEX Logistics" fill priority sizes="86px" className="object-contain mix-blend-screen" />
           </span>
         </a>
 
